@@ -1,0 +1,37 @@
+{
+  "name": "memact-origin",
+  "private": true,
+  "version": "0.0.0",
+  "description": "High-precision origin candidate engine for Memact thought queries.",
+  "license": "SEE LICENSE IN LICENSE",
+  "type": "module",
+  "main": "./src/engine.mjs",
+  "exports": {
+    ".": "./src/engine.mjs",
+    "./cli": "./src/cli.mjs"
+  },
+  "keywords": [
+    "memact",
+    "origin",
+    "thought-citation",
+    "deterministic",
+    "evidence"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Memact/Origin.git"
+  },
+  "homepage": "https://github.com/Memact/Origin",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "memact-origin": "./src/cli.mjs"
+  },
+  "scripts": {
+    "check": "node ./scripts/check.mjs",
+    "origin": "node ./src/cli.mjs",
+    "sample": "node ./src/cli.mjs --input examples/sample-inference-output.json --thought \"I need to build something real before applying anywhere\" --format report",
+    "sample:json": "node ./src/cli.mjs --input examples/sample-inference-output.json --thought \"I need to build something real before applying anywhere\" --format json"
+  }
+}

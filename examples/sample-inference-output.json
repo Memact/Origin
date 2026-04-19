@@ -1,0 +1,36 @@
+{
+  "schema_version": "memact.inference.v0",
+  "generated_at": "2026-04-19T00:00:00.000Z",
+  "records": [
+    {
+      "id": "act_1",
+      "source_label": "Essay: build something real before applying anywhere",
+      "canonical_themes": ["startup"],
+      "sources": [
+        {
+          "domain": "example.com",
+          "url": "https://example.com/build-something-real"
+        }
+      ],
+      "evidence": {
+        "title": "Build something real before applying anywhere",
+        "text_excerpt": "The best proof is to build something real before you apply."
+      }
+    },
+    {
+      "id": "act_2",
+      "source_label": "Deep work and attention notes",
+      "canonical_themes": ["attention"],
+      "sources": [
+        {
+          "domain": "example.com",
+          "url": "https://example.com/deep-work"
+        }
+      ],
+      "evidence": {
+        "title": "Deep Work",
+        "text_excerpt": "Protect attention from distraction."
+      }
+    }
+  ]
+}
