@@ -16,11 +16,13 @@ Origin is intentionally stricter than Influence. It should return fewer results 
 Capture -> Inference -> Schema -> Interface / Query -> Origin + Influence
 ```
 
-Origin runs after the user enters a thought. It consumes Inference records and compares the thought against captured evidence.
+Origin runs after the user enters a thought or question. It consumes Inference records and compares the query against captured evidence.
+
+Origin supports Memact's citation and answer engine by finding specific source candidates that may directly support, introduce, or closely match the user's query.
 
 ## What It Does
 
-- accepts a user thought query
+- accepts a user thought/question query
 - reads `memact.inference.v0` records
 - scores direct source candidates using deterministic wording overlap
 - prioritizes exact phrase and rare term overlap
@@ -70,7 +72,7 @@ Run the sample:
 npm run sample
 ```
 
-Analyze a thought against Inference output:
+Analyze a thought or question against Inference output:
 
 ```powershell
 npm run origin -- --input ..\inference-output.json --thought "I need to build something real before applying anywhere" --format report
