@@ -13,10 +13,10 @@ Origin is intentionally stricter than Influence. It should return fewer results 
 ## Pipeline Position
 
 ```text
-Capture -> Inference -> Schema -> Interface / Query -> Origin + Influence
+Capture -> Inference -> Schema -> Interface / Query -> Influence / Origin
 ```
 
-Origin runs after the user enters a thought or question. It consumes Inference records and compares the query against captured evidence.
+Origin runs after the user enters a thought or question in Interface / Query. It consumes Inference records and compares the query against captured evidence.
 
 Origin supports Memact's citation and answer engine by finding specific source candidates that may directly support, introduce, or closely match the user's query.
 
