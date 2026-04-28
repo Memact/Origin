@@ -29,7 +29,10 @@ const STOPWORDS = new Set([
 export function detectOriginCandidates(thought, inferenceOutput, options = {}) {
   const minScore = Number(options.minScore ?? 0.34);
   const top = Number(options.top ?? 5);
-  const records = Array.isArray(inferenceOutput?.records) ? inferenceOutput.records : [];
+  const minimumMeaningfulScore = Number(options.minimumMeaningfulScore ?? 0.38);
+  const records = (Array.isArray(inferenceOutput?.records) ? inferenceOutput.records : [])
+    .filter((record) => record.meaningful !== false)
+    .filter((record) => Number(record.meaningful_score ?? 1) >= minimumMeaningfulScore);
   const thoughtTokens = tokenize(thought);
   const thoughtBigrams = makeNgrams(thoughtTokens, 2);
 
@@ -45,10 +48,12 @@ export function detectOriginCandidates(thought, inferenceOutput, options = {}) {
     thought,
     source: {
       inference_schema_version: inferenceOutput?.schema_version ?? null,
-      inferred_record_count: records.length,
+      inferred_record_count: Array.isArray(inferenceOutput?.records) ? inferenceOutput.records.length : 0,
+      meaningful_record_count: records.length,
     },
     thresholds: {
       min_score: minScore,
+      minimum_meaningful_score: minimumMeaningfulScore,
       top,
     },
     candidates,
@@ -88,7 +93,11 @@ function scoreRecord(thought, thoughtTokens, thoughtBigrams, record) {
   const exactPhraseHits = thoughtBigrams.filter((bigram) => recordTextLower.includes(bigram)).length;
   const tokenScore = thoughtTokens.length ? tokenOverlap.length / thoughtTokens.length : 0;
   const phraseScore = thoughtBigrams.length ? exactPhraseHits / thoughtBigrams.length : 0;
-  const score = Number(((tokenScore * 0.65) + (phraseScore * 0.35)).toFixed(4));
+  const meaningfulScore = Number(record.meaningful_score ?? 0.5);
+  const themeBoost = record.canonical_themes?.some((theme) => recordText.toLowerCase().includes(theme))
+    ? 0.04
+    : 0;
+  const score = Number((((tokenScore * 0.58) + (phraseScore * 0.32) + (meaningfulScore * 0.1) + themeBoost)).toFixed(4));
 
   return {
     id: record.id,
@@ -98,6 +107,8 @@ function scoreRecord(thought, thoughtTokens, thoughtBigrams, record) {
     overlapping_terms: Array.from(new Set(tokenOverlap)).slice(0, 12),
     exact_phrase_hits: exactPhraseHits,
     canonical_themes: record.canonical_themes ?? [],
+    meaningful_score: meaningfulScore,
+    packet_id: record.packet_id ?? null,
     sources: record.sources ?? [],
     evidence: record.evidence ?? {},
     claim_type: "origin_candidate",

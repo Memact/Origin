@@ -16,16 +16,18 @@ Origin is intentionally stricter than Influence. It should return fewer results 
 Capture -> Inference -> Schema -> Interface / Query -> Influence / Origin
 ```
 
-Origin runs after the user enters a thought or question in Interface / Query. It consumes Inference records and compares the query against captured evidence.
+Origin runs after the user enters a thought or question in Interface / Query. It consumes retained Inference packets and compares the query against captured evidence.
 
 Origin supports Memact's citation and answer engine by finding specific source candidates that may directly support, introduce, or closely match the user's query.
 
 ## What It Does
 
 - accepts a user thought/question query
-- reads `memact.inference.v0` records
+- reads meaningful `memact.inference.v0` packets
+- ignores low-meaning records filtered out by Inference
 - scores direct source candidates using deterministic wording overlap
 - prioritizes exact phrase and rare term overlap
+- uses the packet meaningfulness score as a small ranking signal
 - emits guarded origin candidates with evidence
 
 ## Public Output Contract
@@ -39,6 +41,8 @@ Origin supports Memact's citation and answer engine by finding specific source c
       "id": "act_1",
       "source_label": "Essay: build something real before applying anywhere",
       "score": 0.91,
+      "packet_id": "packet:act_1",
+      "meaningful_score": 0.72,
       "claim_type": "origin_candidate",
       "reason": "close phrase overlap with the thought and matching activity evidence"
     }
@@ -87,6 +91,7 @@ npm run origin -- --input ..\inference-output.json --thought "I need to build so
 ## Design Rules
 
 - origin is a high-bar claim
+- origin candidates come from meaningful packets, not raw browsing events
 - no source is allowed to be called the cause of a thought
 - weak matches should be suppressed
 - every candidate must cite captured evidence
