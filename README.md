@@ -2,35 +2,25 @@
 
 Version: `v0.0`
 
-Origin is the high-precision query-time engine in the Memact architecture.
+Origin finds possible direct source candidates for a thought.
 
-It answers:
-
-`Did a specific captured source likely introduce this thought?`
-
-Origin is intentionally stricter than Influence. It should return fewer results and avoid weak claims.
-
-## Pipeline Position
+It owns one job:
 
 ```text
-Capture -> Inference -> Schema -> Memory -> Interface / Query -> Influence / Origin
+check whether a specific retained source closely matches or introduced a thought
 ```
 
-Origin runs after the user enters a thought or question in Interface / Query. It consumes retained Inference/Memory evidence and compares the query against captured sources. Origin supports the Memory RAG context; it should not bypass it.
+Origin is stricter than Influence. It should return fewer results and avoid weak claims.
 
-Origin supports Memact's citation and answer engine by finding specific source candidates that may directly support, introduce, or closely match the user's query.
+## What This Repo Owns
 
-## What It Does
+- Accepts a user thought or question.
+- Reads meaningful Inference/Memory evidence.
+- Scores direct source candidates.
+- Prioritizes exact phrase overlap, rare term overlap, and retained evidence strength.
+- Emits guarded origin candidates with source evidence.
 
-- accepts a user thought/question query
-- reads meaningful `memact.inference.v0` packets
-- ignores low-meaning records filtered out by Inference
-- scores direct source candidates using deterministic wording overlap
-- prioritizes exact phrase and rare term overlap
-- uses the packet meaningfulness score as a small ranking signal
-- emits guarded origin candidates with evidence
-
-## Public Output Contract
+## Output
 
 ```json
 {
@@ -39,19 +29,17 @@ Origin supports Memact's citation and answer engine by finding specific source c
   "candidates": [
     {
       "id": "act_1",
-      "source_label": "Essay: build something real before applying anywhere",
-      "score": 0.91,
       "packet_id": "packet:act_1",
-      "meaningful_score": 0.72,
+      "score": 0.91,
       "claim_type": "origin_candidate",
-      "reason": "close phrase overlap with the thought and matching activity evidence"
+      "reason": "close phrase overlap with the thought and matching source evidence"
     }
   ],
-  "language_guardrail": "Origin means a possible direct source candidate, not proof that the source created the thought."
+  "language_guardrail": "Origin means possible source candidate, not proof."
 }
 ```
 
-## Terminal Quickstart
+## Run Locally
 
 Prerequisites:
 
@@ -64,37 +52,36 @@ Install:
 npm install
 ```
 
-Run validation:
+Validate:
 
 ```powershell
 npm run check
 ```
 
-Run the sample:
+Run sample:
 
 ```powershell
 npm run sample
 ```
 
-Analyze a thought or question against Inference output:
+Run against Inference output:
 
 ```powershell
-npm run origin -- --input ..\inference-output.json --thought "I need to build something real before applying anywhere" --format report
+npm run origin -- --input path\to\inference-output.json --thought "I need to build something real" --format report
 ```
 
-Emit JSON:
+JSON output:
 
 ```powershell
-npm run origin -- --input ..\inference-output.json --thought "I need to build something real before applying anywhere" --format json
+npm run origin -- --input path\to\inference-output.json --thought "I need to build something real" --format json
 ```
 
-## Design Rules
+## Contract
 
-- origin is a high-bar claim
-- origin candidates come from meaningful packets, not raw browsing events
-- no source is allowed to be called the cause of a thought
-- weak matches should be suppressed
-- every candidate must cite captured evidence
+- Origin is a candidate engine, not a proof engine.
+- It should prefer precision over recall.
+- It should cite retained evidence.
+- It should not read Capture internals.
 
 ## License
 
