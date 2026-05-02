@@ -1,0 +1,104 @@
+{
+  "matching_exposure_before_thought": {
+    "thought": "I need to build something real before applying",
+    "expected_top_id": "record:builder-proof",
+    "inference": {
+      "schema_version": "memact.inference.v0",
+      "records": [
+        {
+          "id": "record:builder-proof",
+          "source_label": "Do Things that Don't Scale",
+          "meaningful": true,
+          "meaningful_score": 0.91,
+          "canonical_themes": ["builder", "startup", "proof"],
+          "evidence": {
+            "title": "Do Things that Don't Scale",
+            "text_excerpt": "Early founders create proof by building something real before waiting for permission."
+          },
+          "sources": [
+            {
+              "title": "Do Things that Don't Scale",
+              "domain": "paulgraham.com",
+              "url": "https://paulgraham.com/ds.html",
+              "occurred_at": "2026-04-28T10:00:00.000Z"
+            }
+          ]
+        },
+        {
+          "id": "record:distractor",
+          "source_label": "Cooking shrimp dinner",
+          "meaningful": true,
+          "meaningful_score": 0.84,
+          "canonical_themes": ["food"],
+          "evidence": {
+            "title": "Steak and shrimp recipe",
+            "text_excerpt": "A weekend dinner recipe with shrimp and steak."
+          },
+          "sources": [
+            {
+              "title": "Steak and shrimp recipe",
+              "domain": "example-food.test",
+              "url": "https://example-food.test/shrimp",
+              "occurred_at": "2026-04-29T10:00:00.000Z"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "phrase_overlap_trap": {
+    "thought": "I feel behind everyone",
+    "expected_no_top_id": "record:behind-the-scenes",
+    "inference": {
+      "schema_version": "memact.inference.v0",
+      "records": [
+        {
+          "id": "record:behind-the-scenes",
+          "source_label": "Behind the scenes video",
+          "meaningful": true,
+          "meaningful_score": 0.45,
+          "canonical_themes": ["video"],
+          "evidence": {
+            "title": "Behind the scenes",
+            "text_excerpt": "Behind the scenes footage from a movie set."
+          },
+          "sources": [
+            {
+              "title": "Behind the scenes",
+              "domain": "video.test",
+              "url": "https://video.test/behind-scenes",
+              "occurred_at": "2026-04-29T10:00:00.000Z"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "no_clear_origin": {
+    "thought": "Why do I keep thinking about moving cities?",
+    "inference": {
+      "schema_version": "memact.inference.v0",
+      "records": [
+        {
+          "id": "record:unrelated",
+          "source_label": "CSS grid reference",
+          "meaningful": true,
+          "meaningful_score": 0.77,
+          "canonical_themes": ["coding"],
+          "evidence": {
+            "title": "CSS grid reference",
+            "text_excerpt": "A technical reference about CSS layout."
+          },
+          "sources": [
+            {
+              "title": "CSS grid reference",
+              "domain": "developer.mozilla.org",
+              "url": "https://developer.mozilla.org/css/grid",
+              "occurred_at": "2026-04-29T10:00:00.000Z"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
