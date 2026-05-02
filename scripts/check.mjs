@@ -38,5 +38,8 @@ const noOriginResult = detectOriginCandidates(noOrigin.thought, noOrigin.inferen
 if (noOriginResult.candidates.length) {
   throw new Error("Expected no-origin fixture to produce no high-confidence candidates.");
 }
+if (noOriginResult.origin_status !== "unknown_origin" || !noOriginResult.unknown_origin?.reason) {
+  throw new Error("Expected no-origin fixture to return explicit unknown origin state.");
+}
 
 console.log("Origin check passed.");

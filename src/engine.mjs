@@ -28,6 +28,7 @@ const STOPWORDS = new Set([
 
 export function detectOriginCandidates(thought, inferenceOutput, options = {}) {
   const minScore = Number(options.minScore ?? 0.34);
+  const unknownThreshold = Number(options.unknownThreshold ?? minScore);
   const top = Number(options.top ?? 5);
   const minimumMeaningfulScore = Number(options.minimumMeaningfulScore ?? 0.38);
   const records = (Array.isArray(inferenceOutput?.records) ? inferenceOutput.records : [])
@@ -42,10 +43,24 @@ export function detectOriginCandidates(thought, inferenceOutput, options = {}) {
     .sort((a, b) => b.score - a.score || b.exact_phrase_hits - a.exact_phrase_hits)
     .slice(0, top);
 
+  const strongestScore = Number(candidates[0]?.score || 0);
+  const originStatus = candidates.length && strongestScore >= unknownThreshold
+    ? "candidate_found"
+    : "unknown_origin";
+
   return {
     schema_version: "memact.origin.v0",
     generated_at: new Date().toISOString(),
     thought,
+    origin_status: originStatus,
+    unknown_origin: originStatus === "unknown_origin"
+      ? {
+          claim_type: "unknown_origin",
+          reason: "No strong digital origin was found.",
+          threshold: unknownThreshold,
+          strongest_score: strongestScore,
+        }
+      : null,
     source: {
       inference_schema_version: inferenceOutput?.schema_version ?? null,
       inferred_record_count: Array.isArray(inferenceOutput?.records) ? inferenceOutput.records.length : 0,
@@ -53,6 +68,7 @@ export function detectOriginCandidates(thought, inferenceOutput, options = {}) {
     },
     thresholds: {
       min_score: minScore,
+      unknown_threshold: unknownThreshold,
       minimum_meaningful_score: minimumMeaningfulScore,
       top,
     },
@@ -70,7 +86,7 @@ export function formatOriginReport(result) {
   ];
 
   if (!result.candidates.length) {
-    lines.push("No high-precision origin candidates met the threshold.");
+    lines.push(result.unknown_origin?.reason || "No strong digital origin was found.");
     return lines.join("\n");
   }
 
