@@ -85,4 +85,4 @@ npm run origin -- --input path\to\inference-output.json --thought "I need to bui
 
 ## License
 
-See `LICENSE`.
+MIT. See `LICENSE`.

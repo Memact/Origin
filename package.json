@@ -1,9 +1,8 @@
 {
   "name": "memact-origin",
-  "private": true,
   "version": "0.0.0",
   "description": "High-precision origin candidate engine for Memact thought queries.",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "type": "module",
   "main": "./src/engine.mjs",
   "exports": {
